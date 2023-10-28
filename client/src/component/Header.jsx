@@ -30,9 +30,9 @@ export default function Header() {
           <Link to="/about">
             <li className="hidden md:inline hover:underline">About</li>
           </Link>
-          <Link to="/sign-in">
+          <Link to="/">
             {currentUser ? (
-              <img alt="profile" />
+              <img src={currentUser.avatar} alt="profile" />
             ) : (
               <li className="hover:underline">Sign in</li>
             )}
