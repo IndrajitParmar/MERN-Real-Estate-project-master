@@ -86,7 +86,7 @@ export default function Profile() {
           className="border p-3 rounded-lg"
         />
         <input
-          type="text"
+          type="password"
           placeholder="password"
           id="password"
           className="border p-3 rounded-lg"
