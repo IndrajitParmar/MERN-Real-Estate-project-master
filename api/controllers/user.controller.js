@@ -28,6 +28,10 @@ export const updateUser = async (req, res, next) => {
     const { password, ...rest } = updatedUser._doc;
     res.status(200).json(rest);
   } catch (error) {
-    next(error.message);
+    if (error.code === 11000) {
+      next({ message: "Usename or Email Already Exists try with another one" });
+    } else {
+      next(error.message);
+    }
   }
 };
