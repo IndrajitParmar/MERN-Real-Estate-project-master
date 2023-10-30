@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getDownloadURL,
@@ -22,6 +23,7 @@ import { updateUser } from "../../../api/controllers/user.controller.js";
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const fileref = useRef(null);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
@@ -171,9 +173,11 @@ export default function Profile() {
           className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95">
           {loading ? "Loading..." : "Update"}
         </button>
-        <button className="bg-green-700 text-white rounded-lg p-3 uppercase hover:opacity-95">
+        <Link
+          to="/create-listing"
+          className="bg-green-700 text-white rounded-lg p-3 uppercase hover:opacity-95">
           create listing
-        </button>
+        </Link>
       </form>
       <div className="text-red-700 flex justify-between mt-5 cursor-pointer">
         <span onClick={handleDeleteUser}>Delete Account</span>
