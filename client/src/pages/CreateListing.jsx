@@ -64,7 +64,6 @@ function CreateListing() {
       setImageUploadError("You can only upload 6 images per listing");
       setUpload(false);
     }
-    // setUpload(false);
   };
 
   const handleDelteImage = (i) => {
