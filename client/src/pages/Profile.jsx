@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getDownloadURL,
@@ -175,7 +175,7 @@ export default function Profile() {
         </button>
         <Link
           to="/create-listing"
-          className="bg-green-700 text-white rounded-lg p-3 uppercase hover:opacity-95">
+          className="bg-green-700 text-white text-center rounded-lg p-3 uppercase hover:opacity-95">
           create listing
         </Link>
       </form>
