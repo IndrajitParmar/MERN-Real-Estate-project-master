@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { app } from "../firebase";
+import axios from "axios";
 import {
   getDownloadURL,
   getStorage,
@@ -7,9 +8,9 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-function CreateListing() {
+function UpdateListing() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
@@ -31,6 +32,24 @@ function CreateListing() {
   const [upload, setUpload] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const params = useParams();
+
+  useEffect(() => {
+    const fetchlisting = async () => {
+      const listid = params.id;
+      try {
+        const res = await fetch(`/api/listing/get/${listid}`);
+        const data = await res.json();
+        if (data.status === false) {
+          console.log();
+        }
+        setFormData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchlisting();
+  }, []);
 
   const storeImage = async (file) => {
     return new Promise((resolve, reject) => {
@@ -130,7 +149,7 @@ function CreateListing() {
         return setError("Regular price must be greater than discount price");
       setError(false);
 
-      const res = await fetch("/api/listing/create", {
+      const res = await fetch(`/api/listing/update/${params.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -151,11 +170,10 @@ function CreateListing() {
     }
   };
 
-  console.log(formData.offer);
   return (
     <main className="p-10 md:p-3 -mt-10 md:mt-0 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
-        Create a Listing
+        Update a Listing
       </h1>
       <form
         onSubmit={handleSubmit}
@@ -251,7 +269,7 @@ function CreateListing() {
                 max="20"
                 required
                 onChange={handleChange}
-                placeholder={formData.bedrooms}
+                value={formData.bedrooms}
                 className="p-3 border border-gray-300 rounded-lg"
               />
               <span>Beds</span>
@@ -264,7 +282,7 @@ function CreateListing() {
                 max="20"
                 required
                 onChange={handleChange}
-                placeholder={formData.bathrooms}
+                value={formData.bathrooms}
                 className="p-3 border border-gray-300 rounded-lg"
               />
               <span>Bathrooms</span>
@@ -277,7 +295,7 @@ function CreateListing() {
                 max={1000000}
                 required
                 onChange={handleChange}
-                placeholder={formData.regularPrice}
+                value={formData.regularPrice}
                 className="p-3 border border-gray-300 rounded-lg"
               />
               <div className="text-center">
@@ -347,13 +365,14 @@ function CreateListing() {
           <button
             disabled={loading || upload}
             className="p-3 w-full bg-slate-700 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
-            {loading ? "Creating...." : "create listing"}
+            {loading ? "Updating...." : "Update"}
           </button>
           {error ? <p className="text-red-700">{error}</p> : ""}
         </div>
+        {/* <button onClick={fetchlisting}>fetch</button> */}
       </form>
     </main>
   );
 }
 
-export default CreateListing;
+export default UpdateListing;

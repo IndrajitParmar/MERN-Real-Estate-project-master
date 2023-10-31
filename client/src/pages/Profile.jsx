@@ -124,7 +124,7 @@ export default function Profile() {
 
   const handleShowListings = async () => {
     try {
-      const res = await fetch(`api/user/listings/${currentUser._id}`);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
       const data = await res.json();
       if (data.status === false) {
         setListingError(true);
@@ -138,7 +138,7 @@ export default function Profile() {
 
   const handleDeleteList = async (id) => {
     try {
-      const res = await fetch(`api/listing/delete/${id}`, {
+      const res = await fetch(`/api/listing/delete/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -257,9 +257,11 @@ export default function Profile() {
                   className="text-red-700 cursor-pointer uppercase">
                   Delete
                 </button>
-                <button className="text-green-700 cursor-pointer uppercase">
-                  edit
-                </button>
+                <Link to={`/update-listing/${list._id}`}>
+                  <button className="text-green-700 cursor-pointer uppercase">
+                    edit
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
