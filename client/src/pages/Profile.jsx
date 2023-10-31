@@ -19,6 +19,7 @@ import {
   updateUserSuccess,
 } from "../redux/user/userSlice.js";
 import { updateUser } from "../../../api/controllers/user.controller.js";
+import { setDriver } from "mongoose";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -32,6 +33,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [listingError, setListingError] = useState(false);
   const [lists, setLists] = useState([]);
+  const [deleteError, setDeleteError] = useState(false);
 
   useEffect(() => {
     if (file) {
@@ -133,6 +135,24 @@ export default function Profile() {
       setListingError(error.message);
     }
   };
+
+  const handleDeleteList = async (id) => {
+    try {
+      const res = await fetch(`api/listing/delete/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.status === false) {
+        setDeleteError(true);
+        return;
+      }
+      setDeleteError(false);
+      setLists((prev) => prev.filter((listid) => listid !== id));
+    } catch (error) {
+      setDeleteError(error.message);
+    }
+  };
+  console.log(lists);
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -232,7 +252,9 @@ export default function Profile() {
                 {list.description}
               </Link>
               <div className="flex flex-col items-center ">
-                <button className="text-red-700 cursor-pointer uppercase">
+                <button
+                  onClick={() => handleDeleteList(list._id)}
+                  className="text-red-700 cursor-pointer uppercase">
                   Delete
                 </button>
                 <button className="text-green-700 cursor-pointer uppercase">
