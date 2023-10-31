@@ -153,13 +153,13 @@ function CreateListing() {
 
   console.log(formData.offer);
   return (
-    <main className="p-3 max-w-4xl mx-auto">
+    <main className="p-10 md:p-3 -mt-10 md:mt-0 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
         Create a Listing
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-4 sm:flex-row p-4">
+        className="flex flex-col gap-4 md:flex-row p-4 ">
         <div className="flex flex-col gap-4 flex-1">
           <input
             type="text"
