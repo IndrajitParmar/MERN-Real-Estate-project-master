@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
+import { useSelector } from "react-redux";
 import {
   FaBath,
   FaBed,
@@ -13,15 +14,18 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa";
+import Contact from "../component/Contact";
 
 function Listing() {
   SwiperCore.use([Navigation]);
+  const { currentUser } = useSelector((state) => state.user);
   const params = useParams();
   const listid = params.id;
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [contact, setContact] = useState(false);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -56,7 +60,7 @@ function Listing() {
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
-                  className="h-[550px]"
+                  className="h-[450px]"
                   style={{
                     background: `url(${url}) center no-repeat`,
                     backgroundSize: "cover",
@@ -65,7 +69,7 @@ function Listing() {
             ))}
           </Swiper>
           <div
-            className="fixed z-10 top-[90px] right-[20px] bg-slate-100 border rounded-full w-12 h-12 flex justify-center items-center cursor-pointer"
+            className="fixed z-10 top-[13%] right-[3%] bg-slate-100 border rounded-full w-12 h-12 flex justify-center items-center cursor-pointer"
             onClick={() => {
               navigator.clipboard.writeText(window.location.href);
               setCopied(true);
@@ -81,7 +85,7 @@ function Listing() {
               Link Copied!!
             </p>
           )}
-          <div className="flex flex-col flex-wrap max-w-4xl mx-auto p-3 my-7 gap-4">
+          <div className="flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4">
             <p className="text-2xl font-semibold">
               {listing.name} - &#8377;
               {listing.regularPrice.toLocaleString("en-US")}
@@ -127,6 +131,14 @@ function Listing() {
                 {listing.furnished ? "Furnished" : "Not Furnished"}
               </li>
             </ul>
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3">
+                Contact Landlord
+              </button>
+            )}
+            {contact && <Contact listing={listing} />}
           </div>
         </>
       )}
