@@ -8,7 +8,7 @@ export default function Header() {
 
   return (
     <header className="bg-slate-200 shadow-md">
-      <div className="flex justify-between items-center mx-w-6xl mx-auto py-3 px-9">
+      <div className="flex justify-between items-center mx-w-6xl mx-auto py-3 px-5">
         <Link to="/">
           <h1 className="font-bold text-xl sm:text-3xl flex flex-wrap">
             <span className="text-slate-500">Sky</span>
