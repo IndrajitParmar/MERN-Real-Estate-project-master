@@ -33,15 +33,16 @@ function UpdateListing() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams();
+  const listid = params.id;
+  console.log(listid);
 
   useEffect(() => {
     const fetchlisting = async () => {
-      const listid = params.id;
       try {
         const res = await fetch(`/api/listing/get/${listid}`);
         const data = await res.json();
         if (data.status === false) {
-          console.log();
+          console.log(data.message);
         }
         setFormData(data);
       } catch (error) {
@@ -149,7 +150,7 @@ function UpdateListing() {
         return setError("Regular price must be greater than discount price");
       setError(false);
 
-      const res = await fetch(`/api/listing/update/${params.id}`, {
+      const res = await fetch(`/api/listing/update/${listid}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -159,6 +160,7 @@ function UpdateListing() {
       });
 
       const data = await res.json();
+      console.log(data);
       setLoading(false);
       if (data.status === false) {
         setError(data.message);
@@ -369,7 +371,6 @@ function UpdateListing() {
           </button>
           {error ? <p className="text-red-700">{error}</p> : ""}
         </div>
-        {/* <button onClick={fetchlisting}>fetch</button> */}
       </form>
     </main>
   );
