@@ -14,6 +14,7 @@ import {
   deleteUserSuccess,
   signoutUserFailure,
   signoutUserStart,
+  signoutUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -112,13 +113,13 @@ export default function Profile() {
       const res = await fetch("/api/auth/signout");
       const data = await res.json();
       if (data.success === false) {
-        dispatch(signoutUserFailure());
+        dispatch(signoutUserFailure(data.message));
         return;
       }
-      dispatch(signoutUserSuccess());
       console.log(data);
+      dispatch(signoutUserSuccess());
     } catch (error) {
-      dispatch(signoutUserFailure(error.message));
+      dispatch(signoutUserFailure(data.message));
     }
   };
 
