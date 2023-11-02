@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ListingItems from "../component/ListingItems";
 
 function Search() {
   const navigate = useNavigate();
@@ -18,8 +19,6 @@ function Search() {
   const [showMore, setShowMore] = useState(false);
 
   const handleChange = (e) => {
-    e.preventDefault();
-
     if (
       e.target.id === "all" ||
       e.target.id === "rent" ||
@@ -39,8 +38,7 @@ function Search() {
     ) {
       setSidebardata({
         ...sidebardata,
-        [e.target.id]:
-          e.target.checked || e.target.checked === "true" ? true : false,
+        [e.target.id]: e.target.checked,
       });
     }
 
@@ -83,9 +81,15 @@ function Search() {
 
     const fetchListings = async () => {
       setLoading(true);
+      setShowMore(false);
       const searchQuery = url.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
+      if (data.length > 2) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
       setListings(data);
       setLoading(false);
     };
@@ -105,6 +109,18 @@ function Search() {
 
     const searchQuery = url.toString();
     navigate(`/search?${searchQuery}`);
+  };
+
+  const onShowMoreClick = async () => {
+    const numberOfListinngs = listings.length;
+    const startIndex = numberOfListinngs;
+    const url = new URLSearchParams(location.search);
+    url.set("startIndex", startIndex);
+    const searchQuery = url.toString();
+    const res = await fetch(`api/listing/get?${searchQuery}`);
+    const data = await res.json();
+
+    setListings([...listings, ...data]);
   };
   return (
     <div className="flex flex-col md:flex-row">
@@ -205,10 +221,34 @@ function Search() {
           </button>
         </form>
       </div>
-      <div className="">
+      <div className="flex-1 ">
         <h1 className="text-3xl font-semibold border-b-2 p-3 text-slate-700  mt-5 ">
           Listing results:
         </h1>
+        <div className="p-4 flex flex-wrap gap-4">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700">No listing found</p>
+          )}
+          {loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              Loading...
+            </p>
+          )}
+
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <ListingItems key={listing._id} listing={listing} />
+            ))}
+
+          {showMore && (
+            <button
+              onClick={() => onShowMoreClick()}
+              className="text-green-700 hover:underline p-7 w-full text-center">
+              Show More...
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
